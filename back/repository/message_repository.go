@@ -8,7 +8,6 @@ import (
 	"github.com/Martial59110/mon-forum-anonyme/back/models"
 )
 
-
 func GetAllMessages() ([]models.Message, error) {
 	query := `SELECT id, pseudonym, content, avatar, created_at, updated_at 
 			  FROM messages 
@@ -33,7 +32,6 @@ func GetAllMessages() ([]models.Message, error) {
 	return messages, rows.Err()
 }
 
-
 func CreateMessage(pseudonym, content, avatar string) (*models.Message, error) {
 	query := `INSERT INTO messages (pseudonym, content, avatar, created_at, updated_at) 
 			  VALUES ($1, $2, $3, $4, $5) 
@@ -51,7 +49,6 @@ func CreateMessage(pseudonym, content, avatar string) (*models.Message, error) {
 
 	return &msg, nil
 }
-
 
 func GetMessageByID(id int) (*models.Message, error) {
 	query := `SELECT id, pseudonym, content, avatar, created_at, updated_at 
@@ -71,4 +68,3 @@ func GetMessageByID(id int) (*models.Message, error) {
 
 	return &msg, nil
 }
-
