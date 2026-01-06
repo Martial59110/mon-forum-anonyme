@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: forum_db
+    environment:
+      POSTGRES_DB: forum
+      POSTGRES_USER: forum_user
+      POSTGRES_PASSWORD: forum_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend_network
+
+  api:
+    build:
+      context: ./back
+      dockerfile: dockerfile
+    container_name: forum_api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - backend_network
+      - frontend_network
+
+  front:
+    build:
+      context: ./front
+      dockerfile: dockerfile
+    container_name: forum_front
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    networks:
+      - frontend_network
+
+networks:
+  backend_network:
+    driver: bridge
+  frontend_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
