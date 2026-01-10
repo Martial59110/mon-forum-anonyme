@@ -22,10 +22,12 @@ func GetAllMessages() ([]models.Message, error) {
 	var messages []models.Message
 	for rows.Next() {
 		var msg models.Message
-		err := rows.Scan(&msg.ID, &msg.Pseudonym, &msg.Content, &msg.Avatar, &msg.CreatedAt, &msg.UpdatedAt)
+		var avatar sql.NullString
+		err := rows.Scan(&msg.ID, &msg.Pseudonym, &msg.Content, &avatar, &msg.CreatedAt, &msg.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
+		msg.Avatar = avatar.String
 		messages = append(messages, msg)
 	}
 
@@ -39,13 +41,19 @@ func CreateMessage(pseudonym, content, avatar string) (*models.Message, error) {
 
 	now := time.Now()
 	var msg models.Message
+	var avatarValue any
+	if avatar != "" {
+		avatarValue = avatar
+	}
+	var avatarOut sql.NullString
 
-	err := database.DB.QueryRow(query, pseudonym, content, avatar, now, now).Scan(
-		&msg.ID, &msg.Pseudonym, &msg.Content, &msg.Avatar, &msg.CreatedAt, &msg.UpdatedAt)
+	err := database.DB.QueryRow(query, pseudonym, content, avatarValue, now, now).Scan(
+		&msg.ID, &msg.Pseudonym, &msg.Content, &avatarOut, &msg.CreatedAt, &msg.UpdatedAt)
 
 	if err != nil {
 		return nil, err
 	}
+	msg.Avatar = avatarOut.String
 
 	return &msg, nil
 }
@@ -56,8 +64,9 @@ func GetMessageByID(id int) (*models.Message, error) {
 			  WHERE id = $1`
 
 	var msg models.Message
+	var avatar sql.NullString
 	err := database.DB.QueryRow(query, id).Scan(
-		&msg.ID, &msg.Pseudonym, &msg.Content, &msg.Avatar, &msg.CreatedAt, &msg.UpdatedAt)
+		&msg.ID, &msg.Pseudonym, &msg.Content, &avatar, &msg.CreatedAt, &msg.UpdatedAt)
 
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -65,6 +74,7 @@ func GetMessageByID(id int) (*models.Message, error) {
 	if err != nil {
 		return nil, err
 	}
+	msg.Avatar = avatar.String
 
 	return &msg, nil
 }
