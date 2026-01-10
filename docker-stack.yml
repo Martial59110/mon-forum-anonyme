@@ -49,7 +49,8 @@ services:
       restart_policy:
         condition: on-failure
       update_config:
-        order: start-first
+        # En mode "host", on ne peut pas binder 2 fois : stop puis start.
+        order: stop-first
         parallelism: 1
         delay: 5s
 
@@ -70,7 +71,8 @@ services:
       restart_policy:
         condition: on-failure
       update_config:
-        order: start-first
+        # En mode "host", on ne peut pas binder 2 fois : stop puis start.
+        order: stop-first
         parallelism: 1
         delay: 5s
 
