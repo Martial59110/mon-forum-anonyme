@@ -21,7 +21,7 @@ services:
   api:
     image: ghcr.io/${REGISTRY_OWNER}/mon-forum-anonyme-api:${TAG}
     environment:
-      DB_HOST: db
+      DB_HOST: forum_db
       DB_PORT: "5432"
       DB_USER: forum_user
       DB_PASSWORD_FILE: /run/secrets/postgres_password
