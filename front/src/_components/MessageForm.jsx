@@ -96,7 +96,7 @@ function MessageForm({ onMessagePosted }) {
   return (
     <div className="message-form animate-fade-in-up">
       <h2>✨ Poster un message</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div className="form-group">
           <label htmlFor="pseudonym">👤 Pseudonyme *</label>
           <input
