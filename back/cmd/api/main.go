@@ -1,28 +1,52 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/Martial59110/mon-forum-anonyme/back/database"
 	"github.com/Martial59110/mon-forum-anonyme/back/repository"
 )
 
+func initDBWithRetry(maxRetries int, retryDelay time.Duration) (*sql.DB, error) {
+	for i := 0; i < maxRetries; i++ {
+		db, err := database.InitDB()
+		if err == nil {
+			return db, nil
+		}
+
+		log.Printf("Tentative %d/%d - Erreur de connexion à la base de données: %v", i+1, maxRetries, err)
+
+		if i < maxRetries-1 {
+			log.Printf("Nouvelle tentative dans %v...", retryDelay)
+			time.Sleep(retryDelay)
+		}
+	}
+
+	// Dernière tentative
+	return database.InitDB()
+}
+
 func main() {
-	// Initialisation de la base de données
-	db, err := database.InitDB()
+	// Initialisation de la base de données avec retry
+	log.Println("Connexion à la base de données...")
+	db, err := initDBWithRetry(10, 2*time.Second)
 	if err != nil {
-		log.Fatal("Erreur de connexion à la base de données:", err)
+		log.Fatal("Erreur de connexion à la base de données après plusieurs tentatives:", err)
 	}
 	defer db.Close()
+	log.Println("Connexion à la base de données établie avec succès")
 
 	// Création de la table si elle n'existe pas
 	if err := database.CreateTable(); err != nil {
 		log.Fatal("Erreur lors de la création de la table:", err)
 	}
+	log.Println("Table des messages créée/vérifiée")
 
 	// Routes
 	http.HandleFunc("/api/messages", handleMessages)
