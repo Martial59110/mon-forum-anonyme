@@ -16,6 +16,9 @@ services:
     deploy:
       replicas: 1
       endpoint_mode: dnsrr
+      placement:
+        constraints:
+          - node.role == manager
       restart_policy:
         condition: on-failure
 
@@ -31,12 +34,18 @@ services:
     secrets:
       - postgres_password
     ports:
-      - "8080:8080"
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: host
     networks:
       - backend_network
       - frontend_network
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
       restart_policy:
         condition: on-failure
       update_config:
@@ -47,11 +56,17 @@ services:
   front:
     image: ghcr.io/${REGISTRY_OWNER}/mon-forum-anonyme-front:${TAG}
     ports:
-      - "80:80"
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
     networks:
       - frontend_network
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
       restart_policy:
         condition: on-failure
       update_config:
