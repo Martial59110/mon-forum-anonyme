@@ -1,11 +1,13 @@
 .message-form {
-  max-width: 700px;
-  margin: 0 auto 3rem;
-  padding: 2.5rem;
-  background: var(--bg-primary);
+  width: 100%;
+  margin: 0;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.92);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-xl);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   position: relative;
   overflow: hidden;
 }
@@ -16,7 +18,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
+  height: 3px;
   background: linear-gradient(
     90deg,
     var(--primary-color),
@@ -27,40 +29,33 @@
 
 .message-form h2 {
   color: var(--text-primary);
-  margin-bottom: 2rem;
-  text-align: center;
-  font-size: 1.75rem;
+  margin: 0 0 1rem;
+  text-align: left;
+  font-size: 1.1rem;
   font-weight: 700;
   position: relative;
 }
 
-.message-form h2::after {
-  content: '💬';
-  display: block;
-  font-size: 2rem;
-  margin-top: 0.5rem;
-}
-
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.9rem;
   position: relative;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
   font-weight: 600;
   color: var(--text-primary);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 0.875rem 1rem;
+  padding: 0.7rem 0.8rem;
   border: 2px solid var(--border-color);
   border-radius: var(--border-radius-md);
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-family: inherit;
   transition: all 0.3s ease;
   box-sizing: border-box;
@@ -72,12 +67,11 @@
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-  transform: translateY(-1px);
 }
 
 .form-group textarea {
   resize: vertical;
-  min-height: 120px;
+  min-height: 110px;
   line-height: 1.6;
 }
 
@@ -91,7 +85,7 @@
   text-align: right;
   font-size: 0.8rem;
   color: var(--text-light);
-  margin-top: 0.5rem;
+  margin-top: 0.35rem;
   font-weight: 500;
 }
 
@@ -108,9 +102,9 @@
   color: var(--error-color);
   border: 1px solid #fecaca;
   border-radius: var(--border-radius-md);
-  padding: 1rem 1.25rem;
-  margin-bottom: 1.5rem;
-  font-size: 0.95rem;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.9rem;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -127,9 +121,9 @@
   color: var(--success-color);
   border: 1px solid #bbf7d0;
   border-radius: var(--border-radius-md);
-  padding: 1rem 1.25rem;
-  margin-bottom: 1.5rem;
-  font-size: 0.95rem;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.9rem;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -143,12 +137,16 @@
 
 .submit-button {
   width: 100%;
-  padding: 1rem 2rem;
-  background: linear-gradient(135deg, var(--success-color), #059669);
+  padding: 0.8rem 1rem;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-dark)
+  );
   color: white;
   border: none;
   border-radius: var(--border-radius-lg);
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -156,7 +154,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
   position: relative;
   overflow: hidden;
 }
@@ -182,9 +180,13 @@
 }
 
 .submit-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-  background: linear-gradient(135deg, #059669, var(--success-color));
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(
+    135deg,
+    var(--primary-dark),
+    var(--primary-color)
+  );
 }
 
 .submit-button:disabled {
@@ -215,12 +217,11 @@
 
 @media (max-width: 768px) {
   .message-form {
-    margin: 0 auto 2rem;
-    padding: 2rem 1.5rem;
+    padding: 1rem;
   }
 
   .message-form h2 {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
   }
 
   .form-group input,
@@ -230,7 +231,7 @@
   }
 
   .submit-button {
-    padding: 0.875rem 1.5rem;
+    padding: 0.85rem 1rem;
     font-size: 1rem;
   }
 }
