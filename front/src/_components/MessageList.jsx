@@ -39,41 +39,52 @@ function MessageList() {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
   if (loading) {
-    return <div className="message-list-loading">Chargement des messages...</div>;
+    return (
+      <div className="message-list-loading animate-pulse">
+        ⏳ Chargement des messages...
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <div className="message-list-error">
-        Erreur lors du chargement: {error}
+      <div className="message-list-error animate-bounce-in">
+        🚫 Erreur lors du chargement: {error}
         <button onClick={fetchMessages} className="retry-button">
-          Réessayer
+          🔄 Réessayer
         </button>
       </div>
     );
   }
 
   return (
-    <div className="message-list">
-      <h2>Messages du forum</h2>
+    <div className="message-list animate-fade-in-up">
+      <h2>📝 Messages du forum</h2>
       {!Array.isArray(messages) || messages.length === 0 ? (
-        <p className="no-messages">Aucun message pour le moment. Soyez le premier à poster !</p>
+        <p className="no-messages animate-bounce-in">
+          📭 Aucun message pour le moment. Soyez le premier à poster ! ✨
+        </p>
       ) : (
         <div className="messages-container">
           {messages.map((message) => (
-            <div key={message.id} className="message-card">
+            <div key={message.id} className="message-card animate-fade-in">
               <div className="message-header">
                 <span className="pseudonym">{message.pseudonym}</span>
-                <span className="timestamp">{formatDate(message.created_at)}</span>
+                <span className="timestamp">
+                  {formatDate(message.created_at)}
+                </span>
               </div>
               {message.avatar && (
                 <div className="avatar">
-                  <img src={message.avatar} alt={`Avatar de ${message.pseudonym}`} />
+                  <img
+                    src={message.avatar}
+                    alt={`Avatar de ${message.pseudonym}`}
+                  />
                 </div>
               )}
               <div className="message-content">{message.content}</div>

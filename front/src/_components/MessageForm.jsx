@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import './MessageForm.css';
 
 const API_BASE_URL = 'http://localhost:8080';
@@ -7,16 +8,17 @@ function MessageForm({ onMessagePosted }) {
   const [formData, setFormData] = useState({
     pseudonym: '',
     content: '',
-    avatar: ''
+    avatar: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -56,28 +58,33 @@ function MessageForm({ onMessagePosted }) {
         body: JSON.stringify({
           pseudonym: formData.pseudonym.trim(),
           content: formData.content.trim(),
-          avatar: formData.avatar.trim() || null
+          avatar: formData.avatar.trim() || null,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de l\'envoi du message');
+        throw new Error("Erreur lors de l'envoi du message");
       }
 
       const newMessage = await response.json();
+
+      // Show success message
+      setSuccess('✅ Message posté avec succès !');
 
       // Reset form
       setFormData({
         pseudonym: '',
         content: '',
-        avatar: ''
+        avatar: '',
       });
+
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(null), 3000);
 
       // Notify parent component
       if (onMessagePosted) {
         onMessagePosted(newMessage);
       }
-
     } catch (err) {
       setError(err.message);
       console.error('Error posting message:', err);
@@ -87,11 +94,11 @@ function MessageForm({ onMessagePosted }) {
   };
 
   return (
-    <div className="message-form">
-      <h2>Poster un message</h2>
+    <div className="message-form animate-fade-in-up">
+      <h2>✨ Poster un message</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="pseudonym">Pseudonyme *</label>
+          <label htmlFor="pseudonym">👤 Pseudonyme *</label>
           <input
             type="text"
             id="pseudonym"
@@ -105,7 +112,7 @@ function MessageForm({ onMessagePosted }) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="avatar">Avatar (URL optionnel)</label>
+          <label htmlFor="avatar">🖼️ Avatar (URL optionnel)</label>
           <input
             type="url"
             id="avatar"
@@ -117,7 +124,7 @@ function MessageForm({ onMessagePosted }) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="content">Message *</label>
+          <label htmlFor="content">💬 Message *</label>
           <textarea
             id="content"
             name="content"
@@ -134,21 +141,27 @@ function MessageForm({ onMessagePosted }) {
         </div>
 
         {error && (
-          <div className="error-message">
-            {error}
-          </div>
+          <div className="error-message animate-bounce-in">{error}</div>
+        )}
+
+        {success && (
+          <div className="success-message animate-bounce-in">{success}</div>
         )}
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="submit-button"
+          className={`submit-button ${isSubmitting ? 'loading' : ''}`}
         >
-          {isSubmitting ? 'Envoi en cours...' : 'Poster le message'}
+          {isSubmitting ? '📤 Envoi en cours...' : '🚀 Poster le message'}
         </button>
       </form>
     </div>
   );
 }
+
+MessageForm.propTypes = {
+  onMessagePosted: PropTypes.func,
+};
 
 export default MessageForm;

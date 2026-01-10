@@ -1,4 +1,5 @@
 import './App.css';
+import './style/animations.css';
 import { useState } from 'react';
 import Header from './_components/Header.jsx';
 import MessageList from './_components/MessageList.jsx';
@@ -8,8 +9,7 @@ function App() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleMessagePosted = () => {
-    
-    setRefreshTrigger(prev => prev + 1);
+    setRefreshTrigger((prev) => prev + 1);
   };
 
   return (
