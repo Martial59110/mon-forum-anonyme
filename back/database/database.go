@@ -3,7 +3,9 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
+	"strings"
 
 	_ "github.com/lib/pq"
 )
@@ -14,7 +16,21 @@ func InitDB() (*sql.DB, error) {
 	dbHost := getEnv("DB_HOST", "localhost")
 	dbPort := getEnv("DB_PORT", "5432")
 	dbUser := getEnv("DB_USER", "forum_user")
-	dbPassword := getEnv("DB_PASSWORD", "forum_password")
+	dbPassword := getEnv("DB_PASSWORD", "")
+	if dbPassword == "" {
+		// Support Docker secrets pattern (Swarm/K8s): DB_PASSWORD_FILE=/run/secrets/...
+		if passwordFile := os.Getenv("DB_PASSWORD_FILE"); passwordFile != "" {
+			b, err := os.ReadFile(passwordFile)
+			if err != nil {
+				return nil, fmt.Errorf("failed to read DB_PASSWORD_FILE: %w", err)
+			}
+			dbPassword = strings.TrimSpace(string(b))
+		}
+	}
+	if dbPassword == "" {
+		log.Println("DB_PASSWORD/DB_PASSWORD_FILE non défini, utilisation du mot de passe par défaut (forum_password)")
+		dbPassword = "forum_password"
+	}
 	dbName := getEnv("DB_NAME", "forum")
 
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
