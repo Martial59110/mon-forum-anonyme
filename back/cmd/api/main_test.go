@@ -118,4 +118,3 @@ func TestHandleMessagesPOSTSuccess(t *testing.T) {
 		t.Fatalf("unmet SQL expectations: %v", err)
 	}
 }
-
