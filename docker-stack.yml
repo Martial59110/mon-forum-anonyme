@@ -3,19 +3,20 @@ version: "3.8"
 services:
   db:
     image: postgres:16-alpine
+    # Contournement : pas d'overlay Swarm (VXLAN) → réseau host
+    network_mode: host
     environment:
       POSTGRES_DB: forum
       POSTGRES_USER: forum_user
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    # N'écoute que sur localhost (évite d'exposer Postgres sur Internet)
+    command: ["postgres", "-c", "listen_addresses=127.0.0.1"]
     secrets:
       - postgres_password
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - backend_network
     deploy:
       replicas: 1
-      endpoint_mode: dnsrr
       placement:
         constraints:
           - node.role == manager
@@ -24,8 +25,9 @@ services:
 
   api:
     image: ghcr.io/${REGISTRY_OWNER}/mon-forum-anonyme-api:${TAG}
+    network_mode: host
     environment:
-      DB_HOST: tasks.forum_db
+      DB_HOST: 127.0.0.1
       DB_PORT: "5432"
       DB_USER: forum_user
       DB_PASSWORD_FILE: /run/secrets/postgres_password
@@ -33,14 +35,6 @@ services:
       API_PORT: "8080"
     secrets:
       - postgres_password
-    ports:
-      - target: 8080
-        published: 8080
-        protocol: tcp
-        mode: host
-    networks:
-      - backend_network
-      - frontend_network
     deploy:
       replicas: 1
       placement:
@@ -49,20 +43,14 @@ services:
       restart_policy:
         condition: on-failure
       update_config:
-        # En mode "host", on ne peut pas binder 2 fois : stop puis start.
+        # En mode host, on ne peut pas binder 2 fois : stop puis start.
         order: stop-first
         parallelism: 1
         delay: 5s
 
   front:
     image: ghcr.io/${REGISTRY_OWNER}/mon-forum-anonyme-front:${TAG}
-    ports:
-      - target: 80
-        published: 80
-        protocol: tcp
-        mode: host
-    networks:
-      - frontend_network
+    network_mode: host
     deploy:
       replicas: 1
       placement:
@@ -71,16 +59,10 @@ services:
       restart_policy:
         condition: on-failure
       update_config:
-        # En mode "host", on ne peut pas binder 2 fois : stop puis start.
+        # En mode host, on ne peut pas binder 2 fois : stop puis start.
         order: stop-first
         parallelism: 1
         delay: 5s
-
-networks:
-  backend_network:
-    driver: overlay
-  frontend_network:
-    driver: overlay
 
 volumes:
   postgres_data:
