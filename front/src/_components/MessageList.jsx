@@ -20,11 +20,13 @@ function MessageList() {
         throw new Error('Failed to fetch messages');
       }
       const data = await response.json();
-      setMessages(data);
+      // Ensure data is an array
+      setMessages(Array.isArray(data) ? data : []);
       setError(null);
     } catch (err) {
       setError(err.message);
       console.error('Error fetching messages:', err);
+      setMessages([]); // Reset to empty array on error
     } finally {
       setLoading(false);
     }
@@ -59,7 +61,7 @@ function MessageList() {
   return (
     <div className="message-list">
       <h2>Messages du forum</h2>
-      {messages.length === 0 ? (
+      {!Array.isArray(messages) || messages.length === 0 ? (
         <p className="no-messages">Aucun message pour le moment. Soyez le premier à poster !</p>
       ) : (
         <div className="messages-container">
