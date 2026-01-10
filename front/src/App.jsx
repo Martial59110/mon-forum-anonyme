@@ -1,4 +1,5 @@
 import './App.css';
+import './style/animations.css';
 import { useState } from 'react';
 import Header from './_components/Header.jsx';
 import MessageList from './_components/MessageList.jsx';
