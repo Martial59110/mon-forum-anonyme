@@ -12,19 +12,17 @@ import (
 )
 
 func main() {
-	// Initialisation de la base de données
+
 	db, err := database.InitDB()
 	if err != nil {
 		log.Fatal("Erreur de connexion à la base de données:", err)
 	}
 	defer db.Close()
 
-	// Création de la table si elle n'existe pas
 	if err := database.CreateTable(); err != nil {
 		log.Fatal("Erreur lors de la création de la table:", err)
 	}
 
-	// Routes
 	http.HandleFunc("/api/messages", handleMessages)
 	http.HandleFunc("/api/health", handleHealth)
 

@@ -9,8 +9,7 @@ function App() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleMessagePosted = () => {
-    
-    setRefreshTrigger(prev => prev + 1);
+    setRefreshTrigger((prev) => prev + 1);
   };
 
   return (

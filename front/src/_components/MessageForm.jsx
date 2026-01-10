@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import './MessageForm.css';
 
 const API_BASE_URL = 'http://localhost:8080';
@@ -7,7 +8,7 @@ function MessageForm({ onMessagePosted }) {
   const [formData, setFormData] = useState({
     pseudonym: '',
     content: '',
-    avatar: ''
+    avatar: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -15,9 +16,9 @@ function MessageForm({ onMessagePosted }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -57,12 +58,12 @@ function MessageForm({ onMessagePosted }) {
         body: JSON.stringify({
           pseudonym: formData.pseudonym.trim(),
           content: formData.content.trim(),
-          avatar: formData.avatar.trim() || null
+          avatar: formData.avatar.trim() || null,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de l\'envoi du message');
+        throw new Error("Erreur lors de l'envoi du message");
       }
 
       const newMessage = await response.json();
@@ -74,7 +75,7 @@ function MessageForm({ onMessagePosted }) {
       setFormData({
         pseudonym: '',
         content: '',
-        avatar: ''
+        avatar: '',
       });
 
       // Clear success message after 3 seconds
@@ -84,7 +85,6 @@ function MessageForm({ onMessagePosted }) {
       if (onMessagePosted) {
         onMessagePosted(newMessage);
       }
-
     } catch (err) {
       setError(err.message);
       console.error('Error posting message:', err);
@@ -141,15 +141,11 @@ function MessageForm({ onMessagePosted }) {
         </div>
 
         {error && (
-          <div className="error-message animate-bounce-in">
-            {error}
-          </div>
+          <div className="error-message animate-bounce-in">{error}</div>
         )}
 
         {success && (
-          <div className="success-message animate-bounce-in">
-            {success}
-          </div>
+          <div className="success-message animate-bounce-in">{success}</div>
         )}
 
         <button
@@ -163,5 +159,9 @@ function MessageForm({ onMessagePosted }) {
     </div>
   );
 }
+
+MessageForm.propTypes = {
+  onMessagePosted: PropTypes.func,
+};
 
 export default MessageForm;
