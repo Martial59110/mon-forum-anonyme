@@ -1,0 +1,46 @@
+name: CD (Swarm deploy)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute short SHA
+        id: vars
+        run: echo "sha_short=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to Swarm (SSH)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script_stop: true
+          script: |
+            set -e
+            cd /opt/mon-forum-anonyme || exit 1
+            git fetch --all
+            git reset --hard origin/main
+
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
+
+            # Ensure Swarm secret exists (idempotent)
+            if ! docker secret inspect postgres_password >/dev/null 2>&1; then
+              printf "%s" "${{ secrets.POSTGRES_PASSWORD }}" | docker secret create postgres_password -
+            fi
+
+            REGISTRY_OWNER="${{ secrets.GHCR_OWNER }}"
+            TAG="${{ steps.vars.outputs.sha_short }}"
+
+            REGISTRY_OWNER="$REGISTRY_OWNER" TAG="$TAG" docker stack deploy -c docker-stack.yml forum --with-registry-auth
+
