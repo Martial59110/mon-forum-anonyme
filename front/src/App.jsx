@@ -15,9 +15,13 @@ function App() {
   return (
     <div className="app">
       <Header />
-      <main className="main-content">
-        <MessageForm onMessagePosted={handleMessagePosted} />
-        <MessageList key={refreshTrigger} />
+      <main className="main-content layout">
+        <section className="layout-left">
+          <MessageForm onMessagePosted={handleMessagePosted} />
+        </section>
+        <section className="layout-right">
+          <MessageList key={refreshTrigger} />
+        </section>
       </main>
     </div>
   );
