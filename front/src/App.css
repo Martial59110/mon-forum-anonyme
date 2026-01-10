@@ -33,19 +33,35 @@
 }
 
 .main-content {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 420px 1fr;
   gap: 2rem;
   position: relative;
   z-index: 1;
 }
 
+.layout-left {
+  position: sticky;
+  top: 1.5rem;
+  align-self: start;
+}
+
+.layout-right {
+  min-width: 0;
+}
+
 @media (max-width: 768px) {
   .main-content {
+    grid-template-columns: 1fr;
     padding: 1rem;
     gap: 1.5rem;
+  }
+
+  .layout-left {
+    position: static;
+    top: auto;
   }
 }
