@@ -28,12 +28,12 @@ func initDBWithRetry(maxRetries int, retryDelay time.Duration) (*sql.DB, error) 
 		}
 	}
 
-	// Dernière tentative
+	
 	return database.InitDB()
 }
 
 func main() {
-	// Initialisation de la base de données avec retry
+	
 	log.Println("Connexion à la base de données...")
 	db, err := initDBWithRetry(10, 2*time.Second)
 	if err != nil {
@@ -42,13 +42,13 @@ func main() {
 	defer db.Close()
 	log.Println("Connexion à la base de données établie avec succès")
 
-	// Création de la table si elle n'existe pas
+	
 	if err := database.CreateTable(); err != nil {
 		log.Fatal("Erreur lors de la création de la table:", err)
 	}
 	log.Println("Table des messages créée/vérifiée")
 
-	// Routes
+	
 	http.HandleFunc("/api/messages", handleMessages)
 	http.HandleFunc("/api/health", handleHealth)
 
