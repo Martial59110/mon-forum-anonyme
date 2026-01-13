@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './MessageList.css';
 
+// Without a reverse-proxy, the browser must reach the API port directly.
+// You can override with VITE_API_BASE_URL, otherwise default to :8080 on same host.
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
   `${window.location.protocol}//${window.location.hostname}:8080`;

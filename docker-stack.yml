@@ -39,8 +39,10 @@ services:
         protocol: tcp
         mode: host
     networks:
-      - backend_network
-      - frontend_network
+      backend_network: {}
+      frontend_network:
+        aliases:
+          - api
     deploy:
       replicas: 1
       placement:
@@ -59,16 +61,18 @@ services:
       - target: 80
         published: 80
         protocol: tcp
-        mode: ingress
+        mode: host
+    networks:
+      - frontend_network
     deploy:
       replicas: 1
       placement:
-        preferences:
-          - spread: node.role
+        constraints:
+          - node.role == manager
       restart_policy:
         condition: on-failure
       update_config:
-        order: start-first
+        order: stop-first
         parallelism: 1
         delay: 5s
 
