@@ -1,0 +1,7 @@
+# Playwright
+front/test-results/
+front/playwright-report/
+
+# Node
+front/node_modules/
+
