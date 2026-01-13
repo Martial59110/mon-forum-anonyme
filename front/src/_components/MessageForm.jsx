@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './MessageForm.css';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  `${window.location.protocol}//${window.location.hostname}:8080`;
 
 function MessageForm({ onMessagePosted }) {
   const [formData, setFormData] = useState({
