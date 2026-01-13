@@ -48,4 +48,3 @@ jobs:
             TAG="${{ steps.vars.outputs.sha_short }}"
 
             REGISTRY_OWNER="$REGISTRY_OWNER" TAG="$TAG" docker stack deploy -c docker-stack.yml forum --with-registry-auth
-
