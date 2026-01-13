@@ -92,6 +92,75 @@ jobs:
           cd front
           npm test
 
+  e2e:
+    runs-on: ubuntu-latest
+    needs: [go-test-backend, test-frontend]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start stack (Docker Compose)
+        run: |
+          docker compose up -d --build
+
+      - name: Wait for API
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS http://localhost:8080/api/health >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "API not ready" >&2
+          docker compose ps
+          docker compose logs --no-color
+          exit 1
+
+      - name: Wait for front
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS http://localhost >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Front not ready" >&2
+          docker compose ps
+          docker compose logs --no-color
+          exit 1
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install frontend deps
+        run: |
+          cd front
+          npm ci
+
+      - name: Install Playwright browsers
+        run: |
+          cd front
+          npx playwright install --with-deps chromium
+
+      - name: Run E2E tests (Playwright)
+        env:
+          E2E_BASE_URL: http://localhost
+        run: |
+          cd front
+          npm run test:e2e
+
+      - name: Dump compose logs on failure
+        if: failure()
+        run: |
+          docker compose ps
+          docker compose logs --no-color
+
+      - name: Stop stack
+        if: always()
+        run: |
+          docker compose down -v
+
   build-docker:
     runs-on: ubuntu-latest
     needs: [gofmt-backend, go-test-backend, eslint-frontend, prettier-frontend, test-frontend]
