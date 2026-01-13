@@ -34,7 +34,6 @@ func initDBWithRetry(maxRetries int, retryDelay time.Duration) (*sql.DB, error) 
 func main() {
 
 	log.Println("Connexion à la base de données...")
-	// Sur un premier démarrage, Postgres peut mettre un peu de temps à être prêt.
 	db, err := initDBWithRetry(60, 2*time.Second)
 	if err != nil {
 		log.Fatal("Erreur de connexion à la base de données après plusieurs tentatives:", err)
