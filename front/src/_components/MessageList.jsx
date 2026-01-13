@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './MessageList.css';
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  `${window.location.protocol}//${window.location.hostname}:8080`;
+// In production, nginx proxies /api -> api:8080 (same-origin in the browser).
+// In development, Vite proxies /api -> http://localhost:8080 (see vite.config.js).
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 function MessageList() {
   const [messages, setMessages] = useState([]);
