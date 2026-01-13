@@ -18,7 +18,6 @@ func InitDB() (*sql.DB, error) {
 	dbUser := getEnv("DB_USER", "forum_user")
 	dbPassword := getEnv("DB_PASSWORD", "")
 	if dbPassword == "" {
-		// Support Docker secrets pattern (Swarm/K8s): DB_PASSWORD_FILE=/run/secrets/...
 		if passwordFile := os.Getenv("DB_PASSWORD_FILE"); passwordFile != "" {
 			b, err := os.ReadFile(passwordFile)
 			if err != nil {
