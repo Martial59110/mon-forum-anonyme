@@ -39,8 +39,10 @@ services:
         protocol: tcp
         mode: host
     networks:
-      - backend_network
-      - frontend_network
+      backend_network: {}
+      frontend_network:
+        aliases:
+          - api
     deploy:
       replicas: 1
       placement:
