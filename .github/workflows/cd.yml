@@ -36,6 +36,10 @@ jobs:
 
             # Ensure Swarm secret exists (idempotent)
             if ! docker secret inspect postgres_password >/dev/null 2>&1; then
+              if [ -z "${{ secrets.POSTGRES_PASSWORD }}" ]; then
+                echo "Missing GitHub Actions secret: POSTGRES_PASSWORD" >&2
+                exit 1
+              fi
               printf "%s" "${{ secrets.POSTGRES_PASSWORD }}" | docker secret create postgres_password -
             fi
 
