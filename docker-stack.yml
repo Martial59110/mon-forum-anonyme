@@ -59,18 +59,16 @@ services:
       - target: 80
         published: 80
         protocol: tcp
-        mode: host
-    networks:
-      - frontend_network
+        mode: ingress
     deploy:
       replicas: 1
       placement:
-        constraints:
-          - node.role == manager
+        preferences:
+          - spread: node.role
       restart_policy:
         condition: on-failure
       update_config:
-        order: stop-first
+        order: start-first
         parallelism: 1
         delay: 5s
 
