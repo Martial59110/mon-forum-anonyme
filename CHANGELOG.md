@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.1](https://github.com/Martial59110/mon-forum-anonyme/compare/v1.0.0...v1.0.1) (2026-01-13)
+
+
+### Bug Fixes
+
+* **ci:** fix  DB_HOST ([e45a279](https://github.com/Martial59110/mon-forum-anonyme/commit/e45a2791765082cc42a65e08bfa9625573476d5d))
+* **ci:** fix DB_HOST ([4b4739e](https://github.com/Martial59110/mon-forum-anonyme/commit/4b4739eedb457f9059384f0bf887b06e6818ef86))
+* **front:** use VPS hostname for API calls ([4f3191a](https://github.com/Martial59110/mon-forum-anonyme/commit/4f3191a39d8edf6e8741230ed7d89f1735677442))
+* **swarm:** avoid overlay network on broken VPS ([78ed338](https://github.com/Martial59110/mon-forum-anonyme/commit/78ed338e031c2f2fe8987ea70161f095cdd9a9e7))
+* **swarm:** use host ports and pin services to manager ([5dd5d48](https://github.com/Martial59110/mon-forum-anonyme/commit/5dd5d485e054225db510451ed88761ed8cdd2f7c))
+* **swarm:** use stop-first updates with host ports ([d26ebd4](https://github.com/Martial59110/mon-forum-anonyme/commit/d26ebd48dedaf509c1cbb7b1a2248f7d977a27d8))
+
 ## 1.0.0 (2026-01-10)
 
 
